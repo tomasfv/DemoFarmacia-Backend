@@ -9,8 +9,7 @@ const router = Router();
 const getDbInfo = async () => {
   return await Cliente.findAll({
     include: {                      
-      model: ObraSocial,            //esto es para que me traiga la obra social del cliente.
-      attributes: ['nombre'],     //solo quiero la variable nombre
+      model: ObraSocial,            
       through:{
         attributes: [],
       }
