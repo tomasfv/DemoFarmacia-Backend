@@ -10,8 +10,8 @@ const getClientes = async (req, res) => {
       whereClause = {
         [Op.or]: [
           { nombre: { [Op.iLike]: `%${nombre}%` } },
-          { apellido: { [Op.iLike]: `%${nombre}%` } }
-        ]
+          { apellido: { [Op.iLike]: `%${nombre}%` } },
+        ],
       };
     }
 
@@ -24,13 +24,20 @@ const getClientes = async (req, res) => {
     });
 
     if (!clientes.length) {
-      return res.status(404).json({ success: false, message: "No se encontraron clientes en la base de datos." });
+      return res
+        .status(404)
+        .json({
+          success: false,
+          message: "No se encontraron clientes en la base de datos.",
+        });
     }
 
     res.status(200).json({ success: true, data: clientes });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "Error al obtener clientes." });
+    res
+      .status(500)
+      .json({ success: false, message: "Error al obtener clientes." });
   }
 };
 
@@ -48,11 +55,15 @@ const getClienteById = async (req, res) => {
     if (cliente) {
       res.status(200).json({ success: true, data: cliente });
     } else {
-      res.status(404).json({ success: false, message: "No se encontró ese cliente." });
+      res
+        .status(404)
+        .json({ success: false, message: "No se encontró ese cliente." });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "Error al obtener el cliente." });
+    res
+      .status(500)
+      .json({ success: false, message: "Error al obtener el cliente." });
   }
 };
 
@@ -69,9 +80,10 @@ const createCliente = async (req, res) => {
     obraSocial,
   } = req.body;
 
-  // Validación manual simple (Mejora 7)
   if (!nombre || !apellido) {
-    return res.status(400).json({ success: false, message: "Nombre y apellido son requeridos." });
+    return res
+      .status(400)
+      .json({ success: false, message: "Nombre y apellido son requeridos." });
   }
 
   try {
@@ -94,16 +106,29 @@ const createCliente = async (req, res) => {
       });
 
       if (obraSocialDb.length === 0) {
-        return res.status(404).json({ success: false, message: "Algunas obras sociales no fueron encontradas" });
+        return res
+          .status(404)
+          .json({
+            success: false,
+            message: "Algunas obras sociales no fueron encontradas",
+          });
       }
 
       await clienteCreado.addObraSocials(obraSocialDb);
     }
 
-    res.status(201).json({ success: true, message: "Cliente creado con éxito!", data: clienteCreado });
+    res
+      .status(201)
+      .json({
+        success: true,
+        message: "Cliente creado con éxito!",
+        data: clienteCreado,
+      });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "Error interno del servidor" });
+    res
+      .status(500)
+      .json({ success: false, message: "Error interno del servidor" });
   }
 };
 
@@ -125,7 +150,12 @@ const updateCliente = async (req, res) => {
     const cliente = await Cliente.findByPk(id);
 
     if (!cliente) {
-      return res.status(404).json({ success: false, message: `Cliente con id ${id} no encontrado.` });
+      return res
+        .status(404)
+        .json({
+          success: false,
+          message: `Cliente con id ${id} no encontrado.`,
+        });
     }
 
     await cliente.update({
@@ -146,10 +176,20 @@ const updateCliente = async (req, res) => {
       await cliente.setObraSocials(obraSocialDb);
     }
 
-    res.status(200).json({ success: true, message: `Cliente con id ${id} actualizado con éxito.` });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: `Cliente con id ${id} actualizado con éxito.`,
+      });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "Error al intentar actualizar el cliente." });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Error al intentar actualizar el cliente.",
+      });
   }
 };
 
@@ -160,15 +200,30 @@ const deleteCliente = async (req, res) => {
     const cliente = await Cliente.findByPk(id);
 
     if (!cliente) {
-      return res.status(404).json({ success: false, message: `Cliente con id ${id} no encontrado.` });
+      return res
+        .status(404)
+        .json({
+          success: false,
+          message: `Cliente con id ${id} no encontrado.`,
+        });
     }
 
     await cliente.destroy();
 
-    res.status(200).json({ success: true, message: `Cliente con id ${id} eliminado con éxito.` });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: `Cliente con id ${id} eliminado con éxito.`,
+      });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "Error al intentar eliminar el cliente." });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Error al intentar eliminar el cliente.",
+      });
   }
 };
 
